@@ -57,15 +57,15 @@ public class Db_socialz_Connector
         socialz_db_connection.Dispose();
     }
 
+    // perform query using procs
     public DataSet select_query(int table, int proc_call, string [] proc_params, string [] param_value){
 	
     string proc = query_string.get_proc(table,proc_call);
 
-     MySqlCommand cmd = new MySqlCommand(proc,socialz_db_connection);
-    
+    MySqlCommand cmd = new MySqlCommand(proc,socialz_db_connection);
     MySqlDataAdapter myAdapter = new MySqlDataAdapter();
     myAdapter.SelectCommand = cmd;
-     DataSet myDataSet = new DataSet();
+    DataSet myDataSet = new DataSet();
 
     if(proc_params.Length>0 ){
 
@@ -74,26 +74,18 @@ public class Db_socialz_Connector
             for (int i = 0; i<proc_params.Length; i++){
             
                 cmd.Parameters.Add(proc_params[i],param_value[i]);
-
             }
 
         }else{
-            
 
             return myDataSet = null;
-
         }
-   
-        
+  
     }
-
         cmd.CommandType = CommandType.StoredProcedure;
         myAdapter.SelectCommand = cmd;
         myAdapter.Fill(myDataSet);
         return myDataSet;
     }
         
-
-
-
 }
