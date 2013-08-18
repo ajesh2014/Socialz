@@ -1,11 +1,39 @@
-﻿@{
+﻿
+@using System.Data;
+@{
+    DataSet rs;
+    Db_socialz_Connector db;
     // get the id area which represnets a town and surrounding areas
-    var area_id = Request.QueryString["parameter1"];
+    var area_id = Request.QueryString["id"];
 
     if(area_id == null){
         
         <h2>oi mate town doesnt exist</h2>
     }
+    
+        // create insttnace of the customer db adaptor class
+         db = new Db_socialz_Connector();
+        
+    // open the connection
+    db.Db_socialz_open();
+    // null arrays
+    string [] proc_param = new string[1];
+    proc_param[0]="@id";
+    string [] param_values = new string[1];
+    param_values[0] = area_id;
+    // get all towns to link to
+    rs = db.select_query(0,1,proc_param,param_values);  
+    
+     //check if there are towns 
+    if(rs== null)
+    {
+        // if there are no towns call the close 
+        var test2 =db.Db_socialz_close();
+        // give usefull error
+        <h2>connection closed result set is null </h2>
+   } 
+
+    
 
 }
 
@@ -17,6 +45,24 @@
         <title></title>
     </head>
     <body>
-        
+                 
+      @{    // if there are results loop through the results set index 0 is the field names
+
+        if(rs!= null && rs.Tables[0].Rows.Count>=1){
+            <h2>it works</h2>
+            for(var count = 0; count<=rs.Tables[0].Rows.Count; count++){
+               
+                    <a href="socials_in_selected_town.cshtml?id= @rs.Tables[0].Rows[count].ItemArray[0]" >this is a click test @rs.Tables[0].Rows[count].ItemArray[1].ToString()</a>
+              
+            }
+            // close db after use
+            db.Db_socialz_close();
+            db.Db_socialz_flush();
+        }else{
+            
+          
+            <h2> data is not there</h2>
+        }
+    }   
     </body>
 </html>

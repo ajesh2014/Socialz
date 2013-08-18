@@ -3,3 +3,9 @@ Site langiage : aps.net +c# with mysql db
 site name: Socialz
 purpose: making new friends whilst going out
 aim: if friends are not able to make and even you can still go and make new friends whilst having a good time
+
+stored proc settings
+
+area = [0][0] = "area_table_all_areas";
+       [0][1] = "wanna_go_out_table_select_wanna_go_out_by_area";
+

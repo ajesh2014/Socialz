@@ -2,21 +2,27 @@
 
 @using MySql.Data.MySqlClient;
 @using System.Configuration;
+@using MySql.Data;
+@using System.Data;
 @{
-    // create insttnace of the customer db adaptor class
+    // create insttnace of the db adaptor class
     Db_socialz_Connector db = new Db_socialz_Connector();
     // open the connection
     db.Db_socialz_open();
+    // null arrays
+    string [] proc_param = new string[0];
+    string [] param_values = new string[0];
     // get all towns to link to
-    var rs = db.get_all_towns ();
-    // check if there are towns 
+    DataSet rs = db.select_query(0,0,proc_param,param_values);  
+    
+     //check if there are towns 
     if(rs== null)
     {
         // if there are no towns call the close 
         var test2 =db.Db_socialz_close();
         // give usefull error
         <h2>connection closed result set is null </h2>
-    } 
+   } 
 
 }
 
@@ -31,13 +37,16 @@
     <body>
         <table>
             
-      @{    // if there are results loop through the results set
-        if(rs!= null){
+      @{    // if there are results loop through the results set index 0 is the field names
+        if(rs!= null && rs.Tables[0].Rows.Count>=1){
             for(var count = 0; count<rs.Tables[0].Rows.Count; count++){
                 <tr> 
-                    <td><a href="/test.cshtml?id= @rs.Tables[0].Rows[count].ItemArray[0]" >this is a click test @rs.Tables[0].Rows[count].ItemArray[1].ToString()</a></td>
+                    <td><a href="socials_in_selected_town.cshtml?id= @rs.Tables[0].Rows[count].ItemArray[0]" >this is a click test @rs.Tables[0].Rows[count].ItemArray[1].ToString()</a></td>
                 </tr>
             }
+            // close db after use
+            db.Db_socialz_close();
+            db.Db_socialz_flush();
         }
     }        
         

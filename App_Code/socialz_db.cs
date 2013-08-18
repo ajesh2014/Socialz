@@ -14,6 +14,7 @@ public class Db_socialz_Connector
 {
     private string connection_string;
     private MySqlConnection socialz_db_connection;
+    private socialz_secure_db query_string;
 
     public Db_socialz_Connector()
     {
@@ -22,6 +23,7 @@ public class Db_socialz_Connector
         //
        connection_string =  ConfigurationManager.ConnectionStrings["socialz"].ConnectionString;
        socialz_db_connection = new MySqlConnection(connection_string);
+       query_string = new socialz_secure_db();
     }
 
     // open the conneciton
@@ -55,19 +57,40 @@ public class Db_socialz_Connector
         socialz_db_connection.Dispose();
     }
 
-    public DataSet get_all_towns(){
+    public DataSet select_query(int table, int proc_call, string [] proc_params, string [] param_value){
 	
-    MySqlCommand cmd = new MySqlCommand("Select * from area_table",socialz_db_connection);
-    
+    string proc = query_string.get_proc(table,proc_call);
 
+     MySqlCommand cmd = new MySqlCommand(proc,socialz_db_connection);
+    
     MySqlDataAdapter myAdapter = new MySqlDataAdapter();
     myAdapter.SelectCommand = cmd;
+     DataSet myDataSet = new DataSet();
 
-    DataSet myDataSet = new DataSet();
-    myAdapter.Fill(myDataSet);
+    if(proc_params.Length>0 ){
 
+        if(proc_params.Length==param_value.Length){
+
+            for (int i = 0; i<proc_params.Length; i++){
+            
+                cmd.Parameters.Add(proc_params[i],param_value[i]);
+
+            }
+
+        }else{
+            
+
+            return myDataSet = null;
+
+        }
    
-     return myDataSet;
+        
+    }
+
+        cmd.CommandType = CommandType.StoredProcedure;
+        myAdapter.SelectCommand = cmd;
+        myAdapter.Fill(myDataSet);
+        return myDataSet;
     }
         
 
