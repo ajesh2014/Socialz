@@ -1,0 +1,48 @@
+﻿
+
+@using MySql.Data.MySqlClient;
+@using System.Configuration;
+@{
+
+ Db_socialz_Connector db = new Db_socialz_Connector();
+
+  var test =db.Db_socialz_open();
+
+  <h2>connection opened = @test</h2>
+ 
+var rs = db.ConvertDataSetToArrayList();
+ 
+    if(rs== null)
+    {
+
+        var test2 =db.Db_socialz_close();
+
+        <h2>connection closed result set is null    </h2>
+    
+    } 
+
+}
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Search by Town</title>
+    </head>
+    <body>
+        <table>
+            
+      @{ 
+            for(var count = 0; count<rs.Tables[0].Rows.Count; count++){
+                <tr>
+                    <td><a href="/test.cshtml?id= @rs.Tables[0].Rows[count].ItemArray[0]" >this is a click test @rs.Tables[0].Rows[count].ItemArray[1].ToString()</a></td>
+                    
+                </tr>
+            }
+        }        
+        
+        </table>
+    </body>
+</html>
