@@ -55,7 +55,7 @@ public class Db_socialz_Connector
         socialz_db_connection.Dispose();
     }
 
-    public DataSet ConvertDataSetToArrayList(){
+    public DataSet get_all_towns(){
 	
     MySqlCommand cmd = new MySqlCommand("Select * from area_table",socialz_db_connection);
     
