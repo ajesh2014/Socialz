@@ -3,22 +3,19 @@
 @using MySql.Data.MySqlClient;
 @using System.Configuration;
 @{
-
- Db_socialz_Connector db = new Db_socialz_Connector();
-
-  var test =db.Db_socialz_open();
-
-  <h2>connection opened = @test</h2>
- 
-var rs = db.ConvertDataSetToArrayList();
- 
+    // create insttnace of the customer db adaptor class
+    Db_socialz_Connector db = new Db_socialz_Connector();
+    // open the connection
+    db.Db_socialz_open();
+    // get all towns to link to
+    var rs = db.get_all_towns ();
+    // check if there are towns 
     if(rs== null)
     {
-
+        // if there are no towns call the close 
         var test2 =db.Db_socialz_close();
-
-        <h2>connection closed result set is null    </h2>
-    
+        // give usefull error
+        <h2>connection closed result set is null </h2>
     } 
 
 }
@@ -34,14 +31,15 @@ var rs = db.ConvertDataSetToArrayList();
     <body>
         <table>
             
-      @{ 
+      @{    // if there are results loop through the results set
+        if(rs!= null){
             for(var count = 0; count<rs.Tables[0].Rows.Count; count++){
-                <tr>
+                <tr> 
                     <td><a href="/test.cshtml?id= @rs.Tables[0].Rows[count].ItemArray[0]" >this is a click test @rs.Tables[0].Rows[count].ItemArray[1].ToString()</a></td>
-                    
                 </tr>
             }
-        }        
+        }
+    }        
         
         </table>
     </body>
